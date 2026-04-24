@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register — Lamhe Farewell Party</title>
+  <link rel="icon" type="image/png" href="static/images/favicon.png" />
+  <script src="config.js"></script>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --gold: #d4a832;
+      --gold-glow: rgba(212, 168, 50, 0.35);
+      --gold-light: #f0c84a;
+      --bg: #0a0a0c;
+      --glass-bg: rgba(255, 255, 255, 0.04);
+      --glass-border: rgba(255, 255, 255, 0.09);
+      --text: #e8e8e8;
+      --text-dim: rgba(232, 232, 232, 0.5);
+      --input-bg: rgba(255, 255, 255, 0.05);
+      --input-border: rgba(255, 255, 255, 0.12);
+      --transition: 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    html,
+    body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px 16px;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 0%, rgba(212, 168, 50, 0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 80% 100%, rgba(212, 168, 50, 0.05) 0%, transparent 70%),
+        #0a0a0c;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 480px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 40px 36px 36px;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+        0 32px 80px rgba(0, 0, 0, 0.6),
+        0 0 60px rgba(212, 168, 50, 0.06);
+      animation: cardIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes cardIn {
+      from {
+        opacity: 0;
+        transform: translateY(24px) scale(0.98);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .header-eyebrow {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+
+    .header h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: #fff;
+      line-height: 1.2;
+    }
+
+    .header p {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      margin-top: 6px;
+    }
+
+    /* ── Lock badge above toggle ── */
+    .lock-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 12px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(212, 168, 50, 0.75);
+    }
+
+    .lock-badge svg {
+      flex-shrink: 0;
+      opacity: 0.85;
+    }
+
+    .lock-badge.unlocked {
+      color: rgba(100, 200, 120, 0.8);
+    }
+
+    /* ── Toggle ── */
+    .toggle-wrap {
+      position: relative;
+      display: flex;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 100px;
+      padding: 4px;
+      margin-bottom: 32px;
+    }
+
+    .toggle-indicator {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: calc(50% - 4px);
+      height: calc(100% - 8px);
+      background: linear-gradient(135deg, var(--gold) 0%, #c49020 100%);
+      border-radius: 100px;
+      transition: transform var(--transition);
+      box-shadow: 0 2px 12px var(--gold-glow);
+    }
+
+    .toggle-indicator.right {
+      transform: translateX(calc(100% + 0px));
+    }
+
+    .toggle-btn {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      padding: 10px 0;
+      background: none;
+      border: none;
+      border-radius: 100px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      color: var(--text-dim);
+      transition: color var(--transition);
+    }
+
+    .toggle-btn.active {
+      color: #0a0a0c;
+    }
+
+    /* ── Locked panel ── */
+    .locked-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 32px 16px 28px;
+      text-align: center;
+    }
+
+    .locked-icon-wrap {
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      background: rgba(212, 168, 50, 0.08);
+      border: 1px solid rgba(212, 168, 50, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 28px rgba(212, 168, 50, 0.12);
+      animation: pulse 2.8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 28px rgba(212, 168, 50, 0.12);
+      }
+
+      50% {
+        box-shadow: 0 0 44px rgba(212, 168, 50, 0.28);
+      }
+    }
+
+    .locked-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.02em;
+    }
+
+    .locked-opens {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    .locked-opens strong {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    .countdown-grid {
+      display: flex;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .cd-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      min-width: 52px;
+    }
+
+    .cd-num {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 10px;
+      padding: 10px 6px 8px;
+      width: 100%;
+      text-align: center;
+      letter-spacing: -0.02em;
+    }
+
+    .cd-label {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .cd-sep {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: rgba(255, 255, 255, 0.2);
+      align-self: center;
+      padding-bottom: 18px;
+    }
+
+    /* ── Forms ── */
+    .forms-container {
+      position: relative;
+    }
+
+    .form-panel {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition: opacity var(--transition), transform var(--transition);
+    }
+
+    .form-panel.active {
+      position: relative;
+      opacity: 1;
+      pointer-events: all;
+      transform: translateY(0);
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 7px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 12px 15px;
+      color: var(--text);
+      font-size: 0.92rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: rgba(232, 232, 232, 0.28);
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--gold);
+      background: rgba(212, 168, 50, 0.05);
+      box-shadow: 0 0 0 3px var(--gold-glow);
+    }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 38px;
+      cursor: pointer;
+    }
+
+    select option {
+      background: #1a1a1e;
+      color: var(--text);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+      line-height: 1.5;
+    }
+
+    .fields-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      margin-top: 24px;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+      border: none;
+      border-radius: 12px;
+      color: #0a0a0c;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+      box-shadow: 0 4px 20px var(--gold-glow);
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.1);
+      box-shadow: 0 8px 28px rgba(212, 168, 50, 0.5);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+      filter: brightness(0.95);
+    }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: var(--gold);
+    }
+
+    .success-overlay {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 20px 0;
+      text-align: center;
+      animation: cardIn 0.5s ease both;
+    }
+
+    .success-overlay.show {
+      display: flex;
+    }
+
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      box-shadow: 0 0 30px var(--gold-glow);
+    }
+
+    .success-overlay h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .success-overlay p {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      max-width: 280px;
+      line-height: 1.6;
+    }
+
+    /* ── Junior wizard ── */
+    .wizard-progress {
+      margin-bottom: 22px;
+    }
+
+    .wizard-progress-text {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .wizard-progress-text span {
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    .wizard-progress-bar {
+      height: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .wizard-progress-fill {
+      height: 100%;
+      width: 50%;
+      background: linear-gradient(90deg, var(--gold-light), var(--gold));
+      border-radius: 4px;
+      transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 0 12px var(--gold-glow);
+    }
+
+    .wizard-step {
+      display: none;
+      opacity: 0;
+      transform: translateX(14px);
+      transition: opacity 0.34s ease, transform 0.34s ease;
+    }
+
+    .wizard-step.active {
+      display: block;
+      opacity: 1;
+      transform: translateX(0);
+      animation: stepIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes stepIn {
+      from {
+        opacity: 0;
+        transform: translateX(14px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Modern toggle switch */
+    .switch-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 6px 0;
+    }
+
+    .switch {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      border-radius: 100px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      padding: 0;
+      flex-shrink: 0;
+      transition: background 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+    }
+
+    .switch.on {
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      border-color: transparent;
+      box-shadow: 0 0 16px var(--gold-glow);
+    }
+
+    .switch-thumb {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+    }
+
+    .switch.on .switch-thumb {
+      transform: translateX(24px);
+    }
+
+    .switch-label {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      font-weight: 500;
+      transition: color 0.28s ease;
+    }
+
+    .switch-label.on {
+      color: var(--gold);
+    }
+
+    /* Option cards */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .opt-card {
+      position: relative;
+      padding: 14px 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 0.88rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      text-align: center;
+    }
+
+    .opt-card:hover {
+      border-color: rgba(212, 168, 50, 0.4);
+      background: rgba(212, 168, 50, 0.05);
+      transform: translateY(-1px);
+    }
+
+    .opt-card.selected {
+      background: linear-gradient(135deg, rgba(212, 168, 50, 0.18), rgba(212, 168, 50, 0.08));
+      border-color: var(--gold);
+      color: #fff;
+      box-shadow: 0 0 18px rgba(212, 168, 50, 0.2);
+    }
+
+    .opt-card.selected::after {
+      content: '✓';
+      position: absolute;
+      top: 5px;
+      right: 9px;
+      font-size: 0.78rem;
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    /* Payment */
+    .payment-block {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    .qr-wrap {
+      width: 158px;
+      height: 158px;
+      margin: 0 auto 14px;
+      background: #fff;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      box-shadow: 0 0 24px rgba(212, 168, 50, 0.12);
+    }
+
+    .qr-wrap {
+      cursor: zoom-in;
+      transition: transform 0.2s ease;
+    }
+
+    .qr-wrap:hover {
+      transform: scale(1.04);
+    }
+
+    .qr-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .qr-lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.92);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+      cursor: zoom-out;
+      animation: qrFade 0.2s ease;
+    }
+
+    .qr-lightbox.show {
+      display: flex;
+    }
+
+    .qr-lightbox img {
+      max-width: min(92vw, 600px);
+      max-height: 92vh;
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 20px 60px rgba(212, 168, 50, 0.3);
+    }
+
+    .qr-lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      font-size: 1.4rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes qrFade {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    .qr-placeholder {
+      width: 100%;
+      height: 100%;
+      background:
+        linear-gradient(135deg, transparent 48%, #0a0a0c 48% 52%, transparent 52%) 0 0/22px 22px,
+        linear-gradient(45deg, transparent 48%, #0a0a0c 48% 52%, transparent 52%) 0 0/22px 22px,
+        #fff;
+      border-radius: 6px;
+      position: relative;
+    }
+
+    .qr-placeholder::after {
+      content: 'QR';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.4rem;
+      color: #0a0a0c;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 6px;
+      letter-spacing: 0.1em;
+    }
+
+    .amount {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.01em;
+      margin-bottom: 14px;
+    }
+
+    .amount span {
+      color: var(--gold);
+    }
+
+    .upi-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 7px 7px 7px 14px;
+      max-width: 280px;
+      margin: 0 auto;
+    }
+
+    .upi-id {
+      flex: 1;
+      text-align: left;
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-size: 0.85rem;
+      color: var(--text);
+      letter-spacing: 0.02em;
+    }
+
+    .copy-btn {
+      background: rgba(212, 168, 50, 0.15);
+      border: 1px solid rgba(212, 168, 50, 0.3);
+      color: var(--gold);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background: var(--gold);
+      color: #0a0a0c;
+    }
+
+    .copy-btn.copied {
+      background: rgba(100, 200, 120, 0.18);
+      border-color: rgba(100, 200, 120, 0.4);
+      color: rgba(140, 220, 160, 1);
+    }
+
+    /* Wizard nav */
+    .wizard-nav {
+      display: flex;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .nav-btn {
+      padding: 13px;
+      border-radius: 12px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+
+    .nav-btn.back {
+      flex: 0 0 110px;
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.1);
+      color: var(--text-dim);
+    }
+
+    .nav-btn.back:hover:not(:disabled) {
+      color: var(--text);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .nav-btn.back:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .nav-btn.next {
+      flex: 1;
+      background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+      color: #0a0a0c;
+      box-shadow: 0 4px 20px var(--gold-glow);
+    }
+
+    .nav-btn.next:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.1);
+      box-shadow: 0 8px 28px rgba(212, 168, 50, 0.5);
+    }
+
+    @media (max-width: 520px) {
+      .card {
+        padding: 30px 20px 28px;
+      }
+
+      .fields-row {
+        grid-template-columns: 1fr;
+      }
+
+      .countdown-grid {
+        gap: 6px;
+      }
+
+      .cd-unit {
+        min-width: 44px;
+      }
+
+      .cd-num {
+        font-size: 1.3rem;
+        padding: 8px 4px 6px;
+      }
+
+      .nav-btn.back {
+        flex: 0 0 90px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <div id="main-content">
+      <div class="header">
+        <div class="header-eyebrow">Lamhe · Phir Kabhi Milenge</div>
+        <h1>Farewell Registration</h1>
+        <p>Secure your spot for the night</p>
+      </div>
+
+      <!-- Lock status badge -->
+      <div class="lock-badge" id="lock-badge">
+        <svg id="lock-icon" width="13" height="14" viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="1.5" y="6" width="10" height="7.5" rx="1.8" stroke="currentColor" stroke-width="1.4" />
+          <path d="M4 6V4.2a2.5 2.5 0 0 1 5 0V6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+        </svg>
+        <span id="lock-label">Registration locked</span>
+      </div>
+
+      <div class="toggle-wrap" role="tablist" aria-label="Attendee type">
+        <div class="toggle-indicator" id="indicator"></div>
+        <button class="toggle-btn active" id="btn-seniors" role="tab" aria-selected="true"
+          onclick="switchTab('seniors')">Seniors</button>
+        <button class="toggle-btn" id="btn-juniors" role="tab" aria-selected="false"
+          onclick="switchTab('juniors')">Juniors</button>
+      </div>
+
+      <div class="forms-container" id="forms-container">
+
+        <!-- LOCKED PANEL -->
+        <div class="locked-panel" id="locked-panel">
+          <div class="locked-icon-wrap">
+            <svg width="28" height="30" viewBox="0 0 28 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="13" width="24" height="16" rx="4" fill="rgba(212,168,50,0.15)" stroke="#d4a832"
+                stroke-width="1.8" />
+              <path d="M8 13V9a6 6 0 0 1 12 0v4" stroke="#d4a832" stroke-width="1.8" stroke-linecap="round" />
+              <circle cx="14" cy="21" r="2.2" fill="#d4a832" />
+              <line x1="14" y1="23.2" x2="14" y2="25.5" stroke="#d4a832" stroke-width="1.8" stroke-linecap="round" />
+            </svg>
+          </div>
+          <div class="locked-title" id="locked-title">Registration Not Open Yet</div>
+          <div class="locked-opens">
+            Opens on <strong id="locked-opens-date">April 21, 2026 at 4:00 PM</strong>
+          </div>
+          <div class="countdown-grid" id="countdown-grid">
+            <div class="cd-unit">
+              <div class="cd-num" id="cd-days">--</div>
+              <div class="cd-label">Days</div>
+            </div>
+            <div class="cd-sep">:</div>
+            <div class="cd-unit">
+              <div class="cd-num" id="cd-hours">--</div>
+              <div class="cd-label">Hours</div>
+            </div>
+            <div class="cd-sep">:</div>
+            <div class="cd-unit">
+              <div class="cd-num" id="cd-mins">--</div>
+              <div class="cd-label">Mins</div>
+            </div>
+            <div class="cd-sep">:</div>
+            <div class="cd-unit">
+              <div class="cd-num" id="cd-secs">--</div>
+              <div class="cd-label">Secs</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SENIORS FORM -->
+        <div class="form-panel" id="form-seniors" role="tabpanel">
+          <form id="senior-form" novalidate>
+            <div class="field">
+              <label for="s-name">Full Name</label>
+              <input type="text" id="s-name" name="name" placeholder="Your full name" required />
+            </div>
+            <div class="fields-row">
+              <div class="field">
+                <label for="s-email">Email</label>
+                <input type="email" id="s-email" name="email" placeholder="your@email.com" required />
+              </div>
+              <div class="field">
+                <label for="s-dept">Department</label>
+                <input type="text" id="s-dept" name="department" placeholder="e.g. CS" required />
+              </div>
+            </div>
+            <div class="field">
+              <label for="s-year">Graduation Year</label>
+              <select id="s-year" name="year" required>
+                <option value="" disabled selected>Select year</option>
+                <option>2025</option>
+                <option>2026</option>
+                <option>2027</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="s-msg">Message (optional)</label>
+              <textarea id="s-msg" name="message" placeholder="Share a memory or a farewell note…"></textarea>
+            </div>
+            <button type="submit" class="submit-btn">Register as Senior</button>
+          </form>
+        </div>
+
+        <!-- JUNIORS WIZARD -->
+        <div class="form-panel" id="form-juniors" role="tabpanel">
+          <div class="wizard" id="j-wizard">
+            <div class="wizard-progress">
+              <div class="wizard-progress-text">Step <span id="j-step-current">1</span> of <span
+                  id="j-step-total">2</span></div>
+              <div class="wizard-progress-bar">
+                <div class="wizard-progress-fill" id="j-progress-fill"></div>
+              </div>
+            </div>
+
+            <!-- Step 1: Registration -->
+            <div class="wizard-step active" data-step="1">
+              <div class="field">
+                <label for="j-name">Full Name</label>
+                <input type="text" id="j-name" placeholder="Your full name" required />
+              </div>
+              <div class="fields-row">
+                <div class="field">
+                  <label for="j-lh">Lecture Hall</label>
+                  <input type="text" id="j-lh" placeholder="e.g. LH-3" required />
+                </div>
+                <div class="field">
+                  <label for="j-reg">Registration No.</label>
+                  <input type="text" id="j-reg" placeholder="e.g. 24BCA0001" required />
+                </div>
+              </div>
+              <div class="field">
+                <label for="j-whatsapp">WhatsApp Number</label>
+                <div class="wa-wrap" style="display:flex;align-items:stretch;gap:0;border:1px solid var(--input-border);border-radius:10px;background:var(--input-bg);overflow:hidden">
+                  <span class="wa-cc" style="display:flex;align-items:center;padding:0 12px;background:rgba(255,255,255,.04);color:var(--text-dim);font-size:.95rem;border-right:1px solid var(--input-border);user-select:none">+91</span>
+                  <input type="tel" id="j-whatsapp" inputmode="numeric" maxlength="10" pattern="[0-9]{10}" placeholder="10-digit number" required style="flex:1;border:none;background:transparent" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2: Payment -->
+            <div class="wizard-step" data-step="2">
+              <div class="payment-block">
+                <div class="qr-wrap" id="j-qr-wrap" title="Click to enlarge">
+                  <img id="j-qr-img" src="static/images/qr.png" alt="UPI QR"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block'; this.parentElement.style.cursor='default';" />
+                  <div class="qr-placeholder" style="display:none;"></div>
+                </div>
+                <div class="amount">₹<span>100</span></div>
+                <div class="upi-row">
+                  <span class="upi-id" id="j-upi-id">rahzin987@oksbi</span>
+                  <button type="button" class="copy-btn" id="j-copy-btn">Copy</button>
+                </div>
+              </div>
+              <div class="field">
+                <label for="j-tx">Transaction ID <span style="color:var(--gold);">*</span></label>
+                <input type="text" id="j-tx" placeholder="Paste your UPI transaction ID" minlength="8" required />
+              </div>
+            </div>
+
+            <div id="j-error"
+              style="display:none; margin-top:14px; padding:10px 14px; background:rgba(220,60,60,0.12); border:1px solid rgba(220,60,60,0.4); border-radius:8px; color:#ff8a8a; font-size:0.85rem; text-align:center;">
+            </div>
+
+            <div class="wizard-nav">
+              <button type="button" class="nav-btn back" id="j-back-btn" disabled>← Back</button>
+              <button type="button" class="nav-btn next" id="j-next-btn">Next →</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SUCCESS STATE -->
+    <div class="qr-lightbox" id="qr-lightbox" role="dialog" aria-label="Payment QR enlarged">
+      <button type="button" class="qr-lightbox-close" aria-label="Close">×</button>
+      <img id="qr-lightbox-img" src="" alt="UPI QR enlarged" />
+    </div>
+
+    <div class="success-overlay" id="success">
+      <div class="success-icon">✓</div>
+      <h2>You're in!</h2>
+      <p>Your transaction ID will be cross-checked and your ticket will be sent to your WhatsApp. See you at Lamhe — it's going to be a day to remember.</p>
+      <a href="index.html" class="back-link" style="margin-top:8px;font-size:0.82rem;color:var(--gold);">← Back to
+        home</a>
+    </div>
+
+    <a href="index.html" class="back-link" id="back-link">← Back to home</a>
+  </div>
+
+  <script>
+    const UNLOCK_TIMES = {
+      seniors: new Date('2026-04-25T16:00:00'),
+      juniors: new Date('2026-04-21T18:30:00'),
+    };
+    const UNLOCK_LABELS = {
+      seniors: 'April 25, 2026 at 4:00 PM',
+      juniors: 'April 21, 2026 at 6:30 PM',
+    };
+    let currentTab = 'seniors';
+
+    function pad(n) {
+      return String(Math.floor(n)).padStart(2, '0');
+    }
+
+    function isTabLocked(tab) {
+      return new Date() < UNLOCK_TIMES[tab];
+    }
+
+    function updateCountdown() {
+      const diff = UNLOCK_TIMES[currentTab] - new Date();
+
+      if (diff <= 0) {
+        renderTabState();
+        return;
+      }
+
+      const days = Math.floor(diff / 86400000);
+      const hours = Math.floor((diff % 86400000) / 3600000);
+      const mins = Math.floor((diff % 3600000) / 60000);
+      const secs = Math.floor((diff % 60000) / 1000);
+
+      document.getElementById('cd-days').textContent = pad(days);
+      document.getElementById('cd-hours').textContent = pad(hours);
+      document.getElementById('cd-mins').textContent = pad(mins);
+      document.getElementById('cd-secs').textContent = pad(secs);
+    }
+
+    function renderTabState() {
+      const locked = isTabLocked(currentTab);
+      const badge = document.getElementById('lock-badge');
+      const label = document.getElementById('lock-label');
+      const lockIcon = document.getElementById('lock-icon');
+      const lockedPanel = document.getElementById('locked-panel');
+      const formSeniors = document.getElementById('form-seniors');
+      const formJuniors = document.getElementById('form-juniors');
+      const opensText = document.getElementById('locked-opens-date');
+      const lockedTitle = document.getElementById('locked-title');
+
+      if (locked) {
+        badge.classList.remove('unlocked');
+        label.textContent = currentTab === 'seniors'
+          ? 'Seniors registration locked'
+          : 'Juniors registration locked';
+        lockIcon.innerHTML = `
+        <rect x="1.5" y="6" width="10" height="7.5" rx="1.8" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M4 6V4.2a2.5 2.5 0 0 1 5 0V6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      `;
+        lockedTitle.textContent = currentTab === 'seniors'
+          ? 'Seniors Registration Not Open Yet'
+          : 'Juniors Registration Not Open Yet';
+        opensText.textContent = UNLOCK_LABELS[currentTab];
+
+        lockedPanel.style.display = 'flex';
+        formSeniors.classList.remove('active');
+        formJuniors.classList.remove('active');
+        updateCountdown();
+      } else {
+        badge.classList.add('unlocked');
+        label.textContent = currentTab === 'seniors'
+          ? 'Seniors registration open'
+          : 'Juniors registration open';
+        lockIcon.innerHTML = `
+        <rect x="1.5" y="6" width="10" height="7.5" rx="1.8" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M4 6V4.2a2.5 2.5 0 0 1 5 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      `;
+
+        lockedPanel.style.display = 'none';
+        if (currentTab === 'seniors') {
+          formJuniors.classList.remove('active');
+          setTimeout(() => formSeniors.classList.add('active'), 40);
+        } else {
+          formSeniors.classList.remove('active');
+          setTimeout(() => formJuniors.classList.add('active'), 40);
+        }
+      }
+    }
+
+    function checkAndInit() {
+      renderTabState();
+      setInterval(updateCountdown, 1000);
+    }
+
+    function switchTab(tab) {
+      if (tab === currentTab) return;
+      currentTab = tab;
+
+      const indicator = document.getElementById('indicator');
+      const btnSeniors = document.getElementById('btn-seniors');
+      const btnJuniors = document.getElementById('btn-juniors');
+
+      if (tab === 'seniors') {
+        indicator.classList.remove('right');
+        btnSeniors.classList.add('active');
+        btnSeniors.setAttribute('aria-selected', 'true');
+        btnJuniors.classList.remove('active');
+        btnJuniors.setAttribute('aria-selected', 'false');
+      } else {
+        indicator.classList.add('right');
+        btnJuniors.classList.add('active');
+        btnJuniors.setAttribute('aria-selected', 'true');
+        btnSeniors.classList.remove('active');
+        btnSeniors.setAttribute('aria-selected', 'false');
+      }
+
+      renderTabState();
+    }
+
+    function handleSubmit(e) {
+      e.preventDefault();
+      const form = e.target;
+      const required = form.querySelectorAll('[required]');
+      let valid = true;
+
+      required.forEach(el => {
+        el.style.borderColor = '';
+        el.style.boxShadow = '';
+        if (!el.value.trim()) {
+          el.style.borderColor = 'rgba(220,60,60,0.7)';
+          el.style.boxShadow = '0 0 0 3px rgba(220,60,60,0.2)';
+          valid = false;
+        }
+      });
+
+      if (!valid) {
+        const first = form.querySelector('[required]');
+        if (first) first.focus();
+        return;
+      }
+
+      document.getElementById('main-content').style.display = 'none';
+      document.getElementById('back-link').style.display = 'none';
+      document.getElementById('success').classList.add('show');
+    }
+
+    document.getElementById('senior-form').addEventListener('submit', handleSubmit);
+
+    /* ── JUNIOR WIZARD ── */
+    const jState = {
+      step: 1,
+      name: '', lh: '', regNo: '', whatsapp: '',
+      transactionId: ''
+    };
+    const J_TOTAL_STEPS = 2;
+
+    function jUpdateProgress() {
+      document.getElementById('j-step-current').textContent = jState.step;
+      document.getElementById('j-step-total').textContent = J_TOTAL_STEPS;
+      document.getElementById('j-progress-fill').style.width = ((jState.step / J_TOTAL_STEPS) * 100) + '%';
+    }
+
+    function jShowStep(n) {
+      jState.step = n;
+      document.querySelectorAll('#j-wizard .wizard-step').forEach(el => {
+        el.classList.toggle('active', Number(el.dataset.step) === n);
+      });
+      document.getElementById('j-back-btn').disabled = (n === 1);
+      document.getElementById('j-next-btn').textContent = (n === J_TOTAL_STEPS) ? 'Complete Registration' : 'Next →';
+      jUpdateProgress();
+    }
+
+    function jMarkInvalid(el, bad) {
+      el.style.borderColor = bad ? 'rgba(220,60,60,0.7)' : '';
+      el.style.boxShadow = bad ? '0 0 0 3px rgba(220,60,60,0.2)' : '';
+    }
+
+    function jValidateStep(n) {
+      if (n === 1) {
+        const fields = ['j-name', 'j-lh', 'j-reg', 'j-whatsapp'].map(id => document.getElementById(id));
+        let ok = true;
+        fields.forEach(el => {
+          const v = el.value.trim();
+          let bad = !v;
+          if (!bad && el.id === 'j-whatsapp') {
+            const digits = v.replace(/\D/g, '');
+            bad = digits.length !== 10;
+          }
+          jMarkInvalid(el, bad);
+          if (bad) ok = false;
+        });
+        if (ok) {
+          jState.name = fields[0].value.trim();
+          jState.lh = fields[1].value.trim();
+          jState.regNo = fields[2].value.trim();
+          jState.whatsapp = fields[3].value.trim();
+        } else {
+          const first = fields.find(el => {
+            const v = el.value.trim();
+            if (!v) return true;
+            if (el.id === 'j-whatsapp') {
+              const d = v.replace(/\D/g, '');
+              return d.length !== 10;
+            }
+            return false;
+          });
+          if (first) first.focus();
+        }
+        return ok;
+      }
+      if (n === 2) {
+        const tx = document.getElementById('j-tx');
+        const v = tx.value.trim();
+        const bad = v.length < 8;
+        jMarkInvalid(tx, bad);
+        if (bad) { tx.focus(); return false; }
+        jState.transactionId = v;
+        return true;
+      }
+      return true;
+    }
+
+    const SHEETS_ENDPOINT = (window.LAMHE_CONFIG && window.LAMHE_CONFIG.SHEETS_ENDPOINT) || 'https://script.google.com/macros/s/AKfycbz8x7fnLySphCVZL-261JHgQ8IIC2dtcrOONRIt1J1z_6O9kzA8-CCt4ACoE6lIn1yipw/exec';
+    const BACKEND_BASE = (window.LAMHE_CONFIG && window.LAMHE_CONFIG.BACKEND_BASE_URL) || '';
+    const BACKEND_ENDPOINT = BACKEND_BASE.replace(/\/$/, '') + '/api/register';
+
+    // Live-strip non-digits and cap to 10 on the WhatsApp field
+    (function () {
+      const w = document.getElementById('j-whatsapp');
+      if (w) {
+        w.addEventListener('input', () => {
+          const d = w.value.replace(/\D/g, '').slice(0, 10);
+          if (w.value !== d) w.value = d;
+        });
+      }
+    })();
+
+    async function jSubmit() {
+      const btn = document.getElementById('j-next-btn');
+      const back = document.getElementById('j-back-btn');
+      const errBox = document.getElementById('j-error');
+      errBox.style.display = 'none';
+      const originalText = btn.textContent;
+      btn.disabled = true; back.disabled = true;
+      btn.textContent = 'Submitting…';
+
+      const payload = {
+        name: jState.name,
+        lh: jState.lh,
+        regNo: jState.regNo,
+        whatsapp: jState.whatsapp,
+        transactionId: jState.transactionId
+      };
+
+      // Backend (source of truth) — must succeed.
+      const backendPromise = fetch(BACKEND_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).then(async (res) => {
+        const j = await res.json().catch(() => ({ ok: false }));
+        if (!res.ok || !j.ok) throw new Error(j.error || 'Submission failed');
+        return j;
+      });
+
+      // Google Sheet (backup log) — fire-and-forget; do NOT block on failure.
+      fetch(SHEETS_ENDPOINT, {
+        method: 'POST',
+        mode: 'cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      }).catch(() => { /* sheet outage shouldn't block registration */ });
+
+      try {
+        await backendPromise;
+        document.getElementById('main-content').style.display = 'none';
+        document.getElementById('back-link').style.display = 'none';
+        document.getElementById('success').classList.add('show');
+      } catch (e) {
+        errBox.textContent = 'Could not submit. Check your internet and try again.';
+        errBox.style.display = 'block';
+        btn.disabled = false; back.disabled = false;
+        btn.textContent = originalText;
+      }
+    }
+
+    function jNext() {
+      if (!jValidateStep(jState.step)) return;
+      if (jState.step === J_TOTAL_STEPS) {
+        jSubmit();
+      } else {
+        jShowStep(jState.step + 1);
+      }
+    }
+
+    function jBack() {
+      if (jState.step > 1) jShowStep(jState.step - 1);
+    }
+
+    document.getElementById('j-next-btn').addEventListener('click', jNext);
+    document.getElementById('j-back-btn').addEventListener('click', jBack);
+
+    // QR lightbox
+    (function () {
+      const wrap = document.getElementById('j-qr-wrap');
+      const img = document.getElementById('j-qr-img');
+      const lb = document.getElementById('qr-lightbox');
+      const lbImg = document.getElementById('qr-lightbox-img');
+      const close = () => lb.classList.remove('show');
+      wrap.addEventListener('click', () => {
+        if (img.style.display === 'none') return;
+        lbImg.src = img.src;
+        lb.classList.add('show');
+      });
+      lb.addEventListener('click', close);
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+    })();
+
+    // Copy UPI ID
+    document.getElementById('j-copy-btn').addEventListener('click', () => {
+      const upi = document.getElementById('j-upi-id').textContent;
+      const btn = document.getElementById('j-copy-btn');
+      const reset = () => setTimeout(() => { btn.classList.remove('copied'); btn.textContent = 'Copy'; }, 1800);
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(upi).then(() => {
+          btn.classList.add('copied'); btn.textContent = 'Copied'; reset();
+        }).catch(() => { btn.textContent = 'Failed'; reset(); });
+      } else {
+        btn.textContent = 'Copy unsupported'; reset();
+      }
+    });
+
+    jUpdateProgress();
+
+    checkAndInit();
+  </script>
+</body>
+
+</html>
