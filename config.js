@@ -7,7 +7,7 @@
 //   https://api.your-domain.com
 // ---------------------------------------------------------------------------
 window.LAMHE_CONFIG = {
-  BACKEND_BASE_URL: "https://REPLACE-ME.onrender.com",
+  BACKEND_BASE_URL: "https://lamhe-backend.onrender.com",
 
   // Optional: Google Apps Script endpoint used as a backup log.
   // Leave the default unless you know you want to change it.
